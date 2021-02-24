@@ -67,15 +67,16 @@ init_sqlite_db()
 
 app = Flask(__name__)
 CORS(app)
-
+'''
 def dict_factory(cursor, row):
     d = {}
     for idx, col in enumerate(cursor.description):
         d[col[0]] = row[idx]
     return d
-
+'''
 @app.route('/register-user/', methods=["POST"])
 def register_user():
+    msg = 'record successfully added'
     if request.method == 'POST':
 
         try:
@@ -87,19 +88,21 @@ def register_user():
             Password = request.form['Password']
 
             with sqlite3.connect('database.db') as conn:
+                '''
                 conn.row_factory = dict_factory
+                '''
                 cur = conn.cursor()
-                table_data = cur.execute("INSERT INTO owner_table(Firstname, Lastname, Username, age, Email, Password)VALUES "
+                cur.execute("INSERT INTO owner_table(Firstname, Lastname, Username, age, Email, Password)VALUES "
                     "(?, ?, ?, ?, ?, ?)", (Firstname, Lastname, Username, age, Email, Password))
                 conn.commit()
-                return  jsonify(table_data)
+                return  jsonify(msg)
 
         except Exception as e:
             conn.rollback()
 
         finally:
             conn.close()
-            return jsonify(table_data)
+            return jsonify(msg)
 
 
 
