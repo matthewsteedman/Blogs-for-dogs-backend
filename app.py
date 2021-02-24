@@ -85,7 +85,8 @@ def register_user():
                 table_data = cur.execute("INSERT INTO owner_table(Firstname, Lastname, Username, age, Email, Password)VALUES "
                     "(?, ?, ?, ?, ?, ?)", (Firstname, Lastname, Username, age, Email, Password))
                 conn.commit()
-                msg = "Record successfully added to owner_table in database"
+                return  jsonify(table_data)
+
         except Exception as e:
             conn.rollback()
 
