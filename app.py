@@ -8,38 +8,38 @@ def init_sqlite_db():
     print("Database opened successfully")
 
     conn.execute('CREATE TABLE IF NOT EXISTS owner_table('
-                    'Ownerid INTEGER PRIMARY KEY AUTOINCREMENT,'
-                    'Firstname TEXT,'
-                    'Lastname TEXT,'
-                    'Username TEXT,'
-                    'age INTEGER,'
-                    'Email TEXT,'
-                    'Password TEXT )'
+                 'Ownerid INTEGER PRIMARY KEY AUTOINCREMENT,'
+                 'Firstname TEXT,'
+                 'Lastname TEXT,'
+                 'Username TEXT,'
+                 'age INTEGER,'
+                 'Email TEXT,'
+                 'Password TEXT )'
                  )
     print("owner_table table created successfully")
 
     conn.execute('CREATE TABLE IF NOT EXISTS dog_table('
-                    'dogid INTEGER PRIMARY KEY AUTOINCREMENT,'
-                    'dogname TEXT, dogtype TEXT, dogage TEXT,'
-                    'Ownerid INTEGER,'
-                    'for_key TEXT,'
-                    'weight TEXT,'
-                    'imageurl TEXT,'
-                    'description TEXT,'
-                    'FOREIGN KEY(for_key) REFERENCES owner_table(Ownerid))')
+                 'dogid INTEGER PRIMARY KEY AUTOINCREMENT,'
+                 'dogname TEXT, dogtype TEXT, dogage TEXT,'
+                 'Ownerid INTEGER,'
+                 'for_key TEXT,'
+                 'weight TEXT,'
+                 'imageurl TEXT,'
+                 'description TEXT,'
+                 'FOREIGN KEY(for_key) REFERENCES owner_table(Ownerid))')
     print("dog_table table created successfully")
 
     conn.execute('CREATE TABLE IF NOT EXISTS daily_logs_table('
-                    'id INTEGER PRIMARY KEY AUTOINCREMENT,'
-                    'username TEXT ,'
-                    'sign_in_time TEXT,'
-                    'sign_out_time TEXT,'
-                    'date TEXT)')
+                 'id INTEGER PRIMARY KEY AUTOINCREMENT,'
+                 'username TEXT ,'
+                 'sign_in_time TEXT,'
+                 'sign_out_time TEXT,'
+                 'date TEXT)')
     print("daily_logs_table table created successfully")
 
     conn.execute('CREATE TABLE IF NOT EXISTS comment_table('
-                    'id INTEGER PRIMARY KEY AUTOINCREMENT,'
-                    'username TEXT, comment TEXT)')
+                 'id INTEGER PRIMARY KEY AUTOINCREMENT,'
+                 'username TEXT, comment TEXT)')
     print("comment_table table created successfully")
 
     cursor = conn.cursor()
@@ -47,23 +47,23 @@ def init_sqlite_db():
 
     print(cursor.fetchall())
 
-#    try:
-#       conn.execute("INSERT INTO owner_table(Firstname, Lastname, Username, age, Email, Password) VALUES "
-#                     "(?, ?, ?, ?, ?, ?)",  ('matthew', 'steedman', 'matta', 21, 'msteedman77@gmail.com', '12345'))
-#       conn.commit()
-#   except Exception as e:
-#        print('Something wrong happend when inserting record to database: ' + str(e))
-#   print('successfully')
+    #    try:
+    #       conn.execute("INSERT INTO owner_table(Firstname, Lastname, Username, age, Email, Password) VALUES "
+    #                     "(?, ?, ?, ?, ?, ?)",  ('matthew', 'steedman', 'matta', 21, 'msteedman77@gmail.com', '12345'))
+    #       conn.commit()
+    #   except Exception as e:
+    #        print('Something wrong happend when inserting record to database: ' + str(e))
+    #   print('successfully')
 
-#    conn.execute('SELECT * FROM owner_table')
-#   table_2 = conn.cursor()
-#    conn.commit()
-#    print(table_2.fetchall())
+    #    conn.execute('SELECT * FROM owner_table')
+    #   table_2 = conn.cursor()
+    #    conn.commit()
+    #    print(table_2.fetchall())
 
-    conn.close()
-
-init_sqlite_db()
-
+#     conn.close()
+#
+#
+# init_sqlite_db()
 
 app = Flask(__name__)
 CORS(app)
@@ -74,10 +74,12 @@ def dict_factory(cursor, row):
         d[col[0]] = row[idx]
     return d
 '''
+
+
 @app.route('/register-user/', methods=["POST"])
 def register_user():
-    msg = 'record successfully added'
     if request.method == 'POST':
+        msg = None
 
         try:
             Firstname = request.form['Firstname']
@@ -93,16 +95,13 @@ def register_user():
                 '''
                 cur = conn.cursor()
                 cur.execute("INSERT INTO owner_table(Firstname, Lastname, Username, age, Email, Password)VALUES "
-                    "(?, ?, ?, ?, ?, ?)", (Firstname, Lastname, Username, age, email, Password))
+                            "(?, ?, ?, ?, ?, ?)", (Firstname, Lastname, Username, age, email, Password))
                 conn.commit()
-                return  jsonify(msg)
+                return jsonify(msg)
 
         except Exception as e:
             conn.rollback()
 
         finally:
-            return jsonify(msg)
             conn.close()
-
-
-
+            return jsonify(msg)
