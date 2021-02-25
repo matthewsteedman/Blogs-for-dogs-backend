@@ -84,7 +84,7 @@ def register_user():
             Lastname = request.form['Lastname']
             Username = request.form['Username']
             age = request.form['age']
-            Email = request.form['Email']
+            Email = request.form['email']
             Password = request.form['Password']
 
             with sqlite3.connect('database.db') as conn:
