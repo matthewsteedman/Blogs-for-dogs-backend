@@ -106,5 +106,4 @@ def register_user():
             conn.rollback()
             response['msg'] = "Something went wrong while inserting a recrod: " + str(e)
         finally:
-            conn.close()
             return jsonify({"Firstname":"d","Lastname":"d","Username":"d","age":"2","email":"d@d.com","Password":"d"})
