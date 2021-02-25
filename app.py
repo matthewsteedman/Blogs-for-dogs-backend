@@ -97,11 +97,11 @@ def register_user():
                 cur.execute("INSERT INTO owner_table(Firstname, Lastname, Username, age, Email, Password)VALUES "
                             "(?, ?, ?, ?, ?, ?)", (firstname, lastname, username, age, email, password))
                 conn.commit()
-                return jsonify(msg)
+                msg = "Record added succesfully."
 
         except Exception as e:
-                conn.rollback()
-
+            conn.rollback()
+            msg = "Something went wrong while inserting a recrod: " + str(e)
         finally:
-                conn.close()
-                return jsonify(msg)
+            conn.close()
+            return jsonify(msg)
