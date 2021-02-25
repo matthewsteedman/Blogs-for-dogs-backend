@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, render_template
 from flask_cors import CORS
 
 
@@ -67,22 +67,23 @@ init_sqlite_db()
 
 app = Flask(__name__)
 CORS(app)
-'''
+
 def dict_factory(cursor, row):
     d = {}
     for idx, col in enumerate(cursor.description):
         d[col[0]] = row[idx]
     return d
-'''
 
-@app.route('/test/')
-def test():
-    return render_template('test.html')
+
+# @app.route('/test/')
+# def test():
+#     return render_template('test.html')
 
 @app.route('/register-user/', methods=["POST"])
 def register_user():
     if request.method == 'POST':
         response = {}
+        response['msg'] = None
 
         try:
             firstname = request.form['Firstname']
@@ -93,9 +94,9 @@ def register_user():
             password = request.form['Password']
 
             with sqlite3.connect('database.db') as conn:
-                '''
+
                 conn.row_factory = dict_factory
-                '''
+
                 cur = conn.cursor()
                 cur.execute("INSERT INTO owner_table(Firstname, Lastname, Username, age, Email, Password)VALUES "
                             "(?, ?, ?, ?, ?, ?)", (firstname, lastname, username, age, email, password))
@@ -104,6 +105,36 @@ def register_user():
 
         except Exception as e:
             conn.rollback()
-            response['msg'] = "Something went wrong while inserting a recrod: " + str(e)
+            response['msg'] = "Something went wrong while inserting a record: " + str(e)
         finally:
-            return jsonify({"Firstname":"d","Lastname":"d","Username":"d","age":"2","email":"d@d.com","Password":"d"})
+            return response
+
+@app.route('/test/')
+def test():
+    return render_template('test.html')
+
+@app.route('/login-user/' , methods=["GET"])
+def login_user():
+    if request.method == 'GET':
+        response = {}
+        response['msg'] = None
+
+        try:
+            username = request.form['username']
+            password = request.form['password']
+
+            with sqlite3.connect('database.db') as conn:
+                cur = conn.cursor()
+                sql_stmnt = ('SELECT * FROM owner_table WHERE username = ? and password = ?')
+                cur.execute(sql_stmnt, [(username), (password)])
+                cur.fetchall()
+                conn.commit()
+                response['msg'] = "user logged in succesfully."
+
+        except Exception as e:
+            conn.rollback()
+            response['msg'] = "Something went wrong while verifying a record: " + str(e)
+
+        finally:
+            return response
+
