@@ -100,7 +100,7 @@ def register_user():
                 return jsonify(msg)
 
         except Exception as e:
-            conn.rollback()
+                conn.rollback()
 
         finally:
             conn.close()
