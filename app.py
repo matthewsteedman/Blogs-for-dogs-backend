@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 
 
@@ -75,11 +75,15 @@ def dict_factory(cursor, row):
     return d
 '''
 
+@app.route('/test/')
+def test():
+    return render_template('test.html')
 
 @app.route('/register-user/', methods=["POST"])
 def register_user():
     if request.method == 'POST':
-        msg = None
+        response = {}
+
 
         try:
             firstname = request.form['Firstname']
@@ -97,11 +101,11 @@ def register_user():
                 cur.execute("INSERT INTO owner_table(Firstname, Lastname, Username, age, Email, Password)VALUES "
                             "(?, ?, ?, ?, ?, ?)", (firstname, lastname, username, age, email, password))
                 conn.commit()
-                msg = "Record added succesfully."
+                response['msg'] = "Record added succesfully."
 
         except Exception as e:
             conn.rollback()
-            msg = "Something went wrong while inserting a recrod: " + str(e)
+            response['msg'] = "Something went wrong while inserting a recrod: " + str(e)
         finally:
             conn.close()
-            return jsonify(msg)
+            return jsonify(response)
