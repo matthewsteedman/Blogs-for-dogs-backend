@@ -63,7 +63,7 @@ def init_sqlite_db():
 #     conn.close()
 #
 #
-# init_sqlite_db()
+init_sqlite_db()
 
 app = Flask(__name__)
 CORS(app)
@@ -83,7 +83,6 @@ def test():
 def register_user():
     if request.method == 'POST':
         response = {}
-
 
         try:
             firstname = request.form['Firstname']
@@ -108,4 +107,4 @@ def register_user():
             response['msg'] = "Something went wrong while inserting a recrod: " + str(e)
         finally:
             conn.close()
-            return jsonify(response)
+            return jsonify({"Firstname":"d","Lastname":"d","Username":"d","age":"2","email":"d@d.com","Password":"d"})
