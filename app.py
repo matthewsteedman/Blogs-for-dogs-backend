@@ -84,7 +84,7 @@ def register_user():
             Lastname = request.form['Lastname']
             Username = request.form['Username']
             age = request.form['age']
-            Email = request.form['email']
+            email = request.form['email']
             Password = request.form['Password']
 
             with sqlite3.connect('database.db') as conn:
@@ -93,7 +93,7 @@ def register_user():
                 '''
                 cur = conn.cursor()
                 cur.execute("INSERT INTO owner_table(Firstname, Lastname, Username, age, Email, Password)VALUES "
-                    "(?, ?, ?, ?, ?, ?)", (Firstname, Lastname, Username, age, Email, Password))
+                    "(?, ?, ?, ?, ?, ?)", (Firstname, Lastname, Username, age, email, Password))
                 conn.commit()
                 return  jsonify(msg)
 
