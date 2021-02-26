@@ -75,15 +75,15 @@ def dict_factory(cursor, row):
     return d
 
 
-# @app.route('/test/')
-# def test():
-#     return render_template('test.html')
+@app.route('/register/')
+def register_test():
+    return render_template('register_text.html')
+
 
 @app.route('/register-user/', methods=["POST"])
 def register_user():
     if request.method == 'POST':
-        response = {}
-        response['msg'] = None
+        response = {'msg': None}
 
         try:
             firstname = request.form['Firstname']
