@@ -83,16 +83,15 @@ def register_test():
 @app.route('/register-user/', methods=["POST"])
 def register_user():
     if request.method == 'POST':
-        response = {'msg': None}
-
+        msg = None
         try:
-            firstname = request.form['Firstname']
-            lastname = request.form['Lastname']
-            username = request.form['Username']
-            age = request.form['age']
-            email = request.form['email']
-            password = request.form['Password']
-
+            post_data = request.get_json()
+            firstname = post_data['Firstname']
+            lastname = post_data['Lastname']
+            username = post_data['Username']
+            age = post_data['age']
+            email = post_data['email']
+            password = post_data['Password']
             with sqlite3.connect('database.db') as conn:
 
                 conn.row_factory = dict_factory
@@ -101,13 +100,43 @@ def register_user():
                 cur.execute("INSERT INTO owner_table(Firstname, Lastname, Username, age, Email, Password)VALUES "
                             "(?, ?, ?, ?, ?, ?)", (firstname, lastname, username, age, email, password))
                 conn.commit()
-                response['msg'] = "Record added succesfully."
+                msg = "Record added succesfully."
 
         except Exception as e:
-            conn.rollback()
-            response['msg'] = "Something went wrong while inserting a record: " + str(e)
+            return {'error': str(e)}
         finally:
-            return response
+            conn.close()
+            return {'msg': msg}
+    # if request.method == 'POST':
+    #     response = {'msg': None}
+    #
+    #     try:
+    #         test =  {
+    #             'test': 'test'
+    #         }
+    #         return test
+    #         firstname = request.form['Firstname']
+    #         lastname = request.form['Lastname']
+    #         username = request.form['Username']
+    #         age = request.form['age']
+    #         email = request.form['email']
+    #         password = request.form['Password']
+    #
+    #         with sqlite3.connect('database.db') as conn:
+    #
+    #             conn.row_factory = dict_factory
+    #
+    #             cur = conn.cursor()
+    #             cur.execute("INSERT INTO owner_table(Firstname, Lastname, Username, age, Email, Password)VALUES "
+    #                         "(?, ?, ?, ?, ?, ?)", (firstname, lastname, username, age, email, password))
+    #             conn.commit()
+    #             response['msg'] = "Record added succesfully."
+    #
+    #     except Exception as e:
+    #         conn.rollback()
+    #         response['msg'] = "Something went wrong while inserting a record: " + str(e)
+    #     finally:
+    #         return response
 
 @app.route('/test/')
 def test():
