@@ -149,8 +149,9 @@ def login_user():
         response['msg'] = None
 
         try:
-            username = request.form['username']
-            password = request.form['password']
+            get_data = request.get_json()
+            username = get_data['username']
+            password = get_data['password']
 
             with sqlite3.connect('database.db') as conn:
                 cur = conn.cursor()
