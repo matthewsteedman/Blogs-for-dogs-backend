@@ -68,6 +68,7 @@ init_sqlite_db()
 app = Flask(__name__)
 CORS(app)
 
+
 def dict_factory(cursor, row):
     d = {}
     for idx, col in enumerate(cursor.description):
@@ -147,18 +148,21 @@ def login_user():
     if request.method == 'GET':
         response = {}
         response['msg'] = None
+        response['body'] = []
 
         try:
-            get_data = request.get_json()
-            username = get_data['username']
-            password = get_data['password']
+            # get_data = request.get_json()
+            # username = get_data['username']
+            # password = get_data['password']
 
             with sqlite3.connect('database.db') as conn:
+                conn.row_factory = dict_factory
                 cur = conn.cursor()
-                sql_stmnt = ('SELECT * FROM owner_table WHERE username = ? and password = ?')
-                cur.execute(sql_stmnt, [(username), (password)])
-                cur.fetchall()
+                sql_stmnt = ('SELECT * FROM owner_table')
+                cur.execute(sql_stmnt)
+                admins = cur.fetchall()
                 conn.commit()
+                response['body'] = admins
                 response['msg'] = "user logged in succesfully."
 
         except Exception as e:
