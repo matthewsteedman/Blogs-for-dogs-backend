@@ -45,6 +45,9 @@ def init_sqlite_db():
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM owner_table")
 
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM dog_table")
+
     print(cursor.fetchall())
 
     #    try:
@@ -172,3 +175,59 @@ def login_user():
         finally:
             return response
 
+@app.route('/create-blog/', methods=["POST"])
+def create_blog():
+    if request.method == 'POST':
+        msg = None
+        try:
+            post_data = request.get_json()
+            dog_name = post_data['dogname']
+            dog_type = post_data['dogtype']
+            dog_age = post_data['dogage']
+            dog_weight = post_data['weight']
+            image_url = post_data['imageurl']
+            description = post_data['description']
+            with sqlite3.connect('database.db') as conn:
+
+                conn.row_factory = dict_factory
+
+                cur = conn.cursor()
+                cur.execute("INSERT INTO dog_table(dogname, dogtype, dogage, weight , imageurl, description)VALUES "
+                            "(?, ?, ?, ?, ?, ?)", (dog_name, dog_type, dog_age, dog_weight, image_url, description))
+                conn.commit()
+                msg = "blog added succesfully."
+
+        except Exception as e:
+            return {'error': str(e)}
+        finally:
+            conn.close()
+            return {'msg': msg}
+
+@app.route('/display-content/' , methods=["GET"])
+def display_rec():
+    if request.method == 'GET':
+        response = {}
+        response['msg'] = None
+        response['body'] = []
+
+        try:
+            # get_data = request.get_json()
+            # username = get_data['username']
+            # password = get_data['password']
+
+            with sqlite3.connect('database.db') as conn:
+                conn.row_factory = dict_factory
+                cur = conn.cursor()
+                sql_stmnt = ('SELECT * FROM dog_table')
+                cur.execute(sql_stmnt)
+                admins = cur.fetchall()
+                conn.commit()
+                response['body'] = admins
+                response['msg'] = "records on display"
+
+        except Exception as e:
+            conn.rollback()
+            response['msg'] = "Something went wrong while displaying a record: " + str(e)
+
+        finally:
+            return response
