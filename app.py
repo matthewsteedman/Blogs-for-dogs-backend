@@ -193,7 +193,7 @@ def create_blog():
 
                 cur = conn.cursor()
                 cur.execute("INSERT INTO dog_table(dogname, dogtype, dogage, weight , imageurl, description)VALUES "
-                            "(?, ?, ?, ?, ?, ?)", (dog_name, dog_type, dog_age, dog_weight, image_url, description))
+                            "(?, ?, ?, ?, ?, ?)", (dog_name, dog_type, dog_age, dog_weight, image_url[12:], description))
                 conn.commit()
                 msg = "blog added succesfully."
 
