@@ -18,15 +18,14 @@ def init_sqlite_db():
                  )
     print("owner_table table created successfully")
 
-    conn.execute('CREATE TABLE IF NOT EXISTS dog_table('
+    conn.execute('CREATE TABLE if Not Exists dog_table('
                  'dogid INTEGER PRIMARY KEY AUTOINCREMENT,'
                  'dogname TEXT, dogtype TEXT, dogage TEXT,'
                  'Ownerid INTEGER,'
-                 'for_key TEXT,'
                  'weight TEXT,'
                  'imageurl TEXT,'
                  'description TEXT,'
-                 'FOREIGN KEY(for_key) REFERENCES owner_table(Ownerid))')
+                 'FOREIGN KEY(Ownerid) REFERENCES owner_table(Ownerid))')
     print("dog_table table created successfully")
 
     conn.execute('CREATE TABLE IF NOT EXISTS daily_logs_table('
