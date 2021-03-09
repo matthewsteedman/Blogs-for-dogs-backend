@@ -230,3 +230,21 @@ def display_rec():
 
         finally:
             return response
+
+
+@app.route('/delete_records/<int:Ownerid>/', methods=["GET"])
+def delete_records(Ownerid):
+
+    msg = None
+    try:
+        with sqlite3.connect('database.db') as conn:
+            cur = conn.cursor()
+            cur.execute("DELETE FROM owner_table WHERE id=" + str(Ownerid))
+            conn.commit()
+            msg = "record deleted successfully deleted"
+    except Exception as e:
+        conn.rollback()
+        msg = "Error occured when attempting to delete a record"
+    finally:
+        conn.close()
+        return  str("record deleted successfully deleted")
