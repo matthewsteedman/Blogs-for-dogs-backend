@@ -49,22 +49,6 @@ def init_sqlite_db():
 
     print(cursor.fetchall())
 
-    #    try:
-    #       conn.execute("INSERT INTO owner_table(Firstname, Lastname, Username, age, Email, Password) VALUES "
-    #                     "(?, ?, ?, ?, ?, ?)",  ('matthew', 'steedman', 'matta', 21, 'msteedman77@gmail.com', '12345'))
-    #       conn.commit()
-    #   except Exception as e:
-    #        print('Something wrong happend when inserting record to database: ' + str(e))
-    #   print('successfully')
-
-    #    conn.execute('SELECT * FROM owner_table')
-    #   table_2 = conn.cursor()
-    #    conn.commit()
-    #    print(table_2.fetchall())
-
-#     conn.close()
-#
-#
 init_sqlite_db()
 
 app = Flask(__name__)
@@ -110,36 +94,6 @@ def register_user():
         finally:
             conn.close()
             return {'msg': msg}
-    # if request.method == 'POST':
-    #     response = {'msg': None}
-    #
-    #     try:
-    #         test =  {
-    #             'test': 'test'
-    #         }
-    #         return test
-    #         firstname = request.form['Firstname']
-    #         lastname = request.form['Lastname']
-    #         username = request.form['Username']
-    #         age = request.form['age']
-    #         email = request.form['email']
-    #         password = request.form['Password']
-    #
-    #         with sqlite3.connect('database.db') as conn:
-    #
-    #             conn.row_factory = dict_factory
-    #
-    #             cur = conn.cursor()
-    #             cur.execute("INSERT INTO owner_table(Firstname, Lastname, Username, age, Email, Password)VALUES "
-    #                         "(?, ?, ?, ?, ?, ?)", (firstname, lastname, username, age, email, password))
-    #             conn.commit()
-    #             response['msg'] = "Record added succesfully."
-    #
-    #     except Exception as e:
-    #         conn.rollback()
-    #         response['msg'] = "Something went wrong while inserting a record: " + str(e)
-    #     finally:
-    #         return response
 
 @app.route('/test/')
 def test():
@@ -232,7 +186,7 @@ def display_rec():
             return response
 
 
-@app.route('/delete_records/<int:Ownerid>/', methods=["GET"])
+@app.route('/delete_records/<int:Ownerid>/', methods=["DELETE"])
 def delete_records(Ownerid):
 
     msg = None
@@ -247,4 +201,4 @@ def delete_records(Ownerid):
         msg = "Error occured when attempting to delete a record"
     finally:
         conn.close()
-        return  str("record deleted successfully deleted")
+        return str("record deleted successfully deleted")
